@@ -52,6 +52,14 @@ class restore_playerraid_activity_structure_step extends restore_activity_struct
         $data = (object)$data;
         $data->course = $this->get_courseid();
 
+        // Mapeia o ID antigo da categoria de questões para o ID recém-criado na restauração.
+        if (!empty($data->questioncategoryid)) {
+            $mappedcategory = $this->get_mappingid('question_category', $data->questioncategoryid);
+            if ($mappedcategory) {
+                $data->questioncategoryid = $mappedcategory;
+            }
+        }
+
         $data->timecreated = $this->apply_date_offset($data->timecreated);
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 

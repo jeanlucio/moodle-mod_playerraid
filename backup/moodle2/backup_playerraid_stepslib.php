@@ -74,8 +74,9 @@ class backup_playerraid_activity_structure_step extends backup_activity_structur
             $attempt->set_source_table('playerraid_attempts', ['playerraidid' => backup::VAR_PARENTID]);
         }
 
-        // Define id annotations (tells Moodle to map the user ID correctly during restore).
+        // Define id annotations (tells Moodle to map the IDs correctly during restore).
         $attempt->annotate_ids('user', 'userid');
+        $playerraid->annotate_ids('question_category', 'questioncategoryid');
 
         // Define file annotations.
         $playerraid->annotate_files('mod_playerraid', 'intro', null);
