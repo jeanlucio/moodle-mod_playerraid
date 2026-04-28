@@ -18,7 +18,7 @@
  * Defines restore_playerraid_activity_structure_step class.
  *
  * @package   mod_playerraid
- * @copyright 2026 Jean Lúcio <jeanlucio@gmail.com>
+ * @copyright 2026 Jean Lúcio
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
