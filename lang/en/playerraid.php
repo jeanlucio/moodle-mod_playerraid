@@ -40,6 +40,7 @@ $string['modulename'] = 'PlayerRaid';
 $string['modulename_help'] = 'The PlayerRaid activity allows students to cooperate to defeat a boss by answering questions from a question bank.';
 $string['modulenameplural'] = 'PlayerRaids';
 $string['nocategories'] = 'No question categories available. Please create a question category first.';
+$string['nonewmodules'] = 'There are no PlayerRaid activities.';
 $string['noquestioncategory'] = 'No question category selected. Please edit the activity and select a question category.';
 $string['noquestions'] = 'No questions found in the selected category.';
 $string['playerraid'] = 'PlayerRaid';

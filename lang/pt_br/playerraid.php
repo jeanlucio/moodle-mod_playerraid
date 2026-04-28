@@ -38,6 +38,7 @@ $string['modulename'] = 'PlayerRaid';
 $string['modulename_help'] = 'A atividade PlayerRaid permite que os alunos cooperem para derrotar um chefão respondendo a perguntas do banco de questões.';
 $string['modulenameplural'] = 'PlayerRaids';
 $string['nocategories'] = 'Nenhuma categoria de questões disponível. Por favor, crie uma categoria de questões primeiro.';
+$string['nonewmodules'] = 'Não há atividades PlayerRaid.';
 $string['noquestioncategory'] = 'Nenhuma categoria de questão selecionada. Edite a atividade e selecione uma categoria de questões.';
 $string['noquestions'] = 'Nenhuma questão encontrada na categoria selecionada.';
 $string['playerraid'] = 'PlayerRaid';
