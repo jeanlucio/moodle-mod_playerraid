@@ -29,6 +29,7 @@ $string['attackcooldown'] = 'You must wait {$a} seconds before attacking again.'
 $string['bosshealth'] = 'Boss health';
 $string['bosshealth_help'] = 'Total health points of the boss. The boss will be defeated when total damage from correct answers reaches this value.';
 $string['bossremaining'] = 'Boss remaining health: {$a->current}/{$a->total}';
+$string['cannotattempt'] = 'You do not have permission to participate in this raid.';
 $string['cooldowntime'] = 'Cooldown time (seconds)';
 $string['cooldowntime_help'] = 'Time the student must wait before attacking again if they answer incorrectly.';
 $string['correctanswer'] = 'Correct! The boss takes damage.';

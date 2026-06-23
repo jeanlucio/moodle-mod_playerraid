@@ -29,6 +29,7 @@ $string['attackcooldown'] = 'Você deve esperar {$a} segundos antes de atacar no
 $string['bosshealth'] = 'Vida do chefão';
 $string['bosshealth_help'] = 'Pontos de vida totais do chefão. O chefão será derrotado quando o dano total das respostas corretas atingir este valor.';
 $string['bossremaining'] = 'Vida restante do chefão: {$a->current}/{$a->total}';
+$string['cannotattempt'] = 'Você não tem permissão para participar deste raid.';
 $string['cooldowntime'] = 'Tempo de cooldown (segundos)';
 $string['cooldowntime_help'] = 'Tempo que o estudante deve esperar antes de atacar novamente se responder incorretamente.';
 $string['correctanswer'] = 'Correto! O chefão sofre dano.';

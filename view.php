@@ -24,6 +24,7 @@
 
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
+require_once($CFG->libdir . '/questionlib.php');
 
 $id = optional_param('id', 0, PARAM_INT);
 $p = optional_param('p', 0, PARAM_INT);
@@ -44,6 +45,7 @@ require_login($course, true, $cm);
 
 $modulecontext = context_module::instance($cm->id);
 require_capability('mod/playerraid:view', $modulecontext);
+$canattempt = has_capability('mod/playerraid:attempt', $modulecontext);
 
 $event = \mod_playerraid\event\course_module_viewed::create(
     [
@@ -86,8 +88,44 @@ $totaldamage = $correctcount * $damagepercorrect;
 $currenthealth = max(0, $totalhealth - $totaldamage);
 $healthpercentage = ($currenthealth / $totalhealth) * 100;
 
+// Check cooldown for the current user.
+$sql = "SELECT MAX(cooldown_expires) AS maxcooldown
+          FROM {playerraid_attempts}
+         WHERE playerraidid = :pid AND userid = :uid";
+$cooldownrecord = $DB->get_record_sql($sql, ['pid' => $playerraid->id, 'uid' => $USER->id]);
+$cooldownexpires = $cooldownrecord ? (int)$cooldownrecord->maxcooldown : 0;
+$currenttime = time();
+
+// Load a random question if user can attack.
+$randomquestionid = 0;
+$question = null;
+if ($currenthealth > 0 && $cooldownexpires <= $currenttime && $canattempt) {
+    $categoryid = $playerraid->questioncategoryid;
+    $sql = "SELECT q.id
+              FROM {question} q
+              JOIN {question_versions} qv ON qv.questionid = q.id
+              JOIN {question_bank_entries} qbe ON qbe.id = qv.questionbankentryid
+             WHERE qbe.questioncategoryid = :categoryid
+               AND qv.status = 'ready'
+               AND q.qtype IN ('multichoice', 'truefalse')";
+
+    $questions = $DB->get_records_sql($sql, ['categoryid' => $categoryid]);
+
+    if (!empty($questions)) {
+        $questionids = array_keys($questions);
+        $randomquestionid = $questionids[array_rand($questionids)];
+        $question = question_bank::load_question($randomquestionid);
+    }
+}
+
 $theme = !empty($playerraid->visual_theme) ? $playerraid->visual_theme : 'boss';
-echo html_writer::start_div('playerraid-boss-container mb-4 playerraid-theme-' . $theme);
+
+echo html_writer::start_div('playerraid-boss-container mb-4');
+echo html_writer::start_div('row');
+
+// Left Column: Boss Status.
+echo html_writer::start_div('col-md-6 mb-4');
+echo html_writer::start_div('playerraid-boss-card playerraid-theme-' . $theme);
 
 $progress = 100 - $healthpercentage;
 if ($progress <= 20) {
@@ -141,63 +179,124 @@ echo html_writer::div(
 );
 echo html_writer::end_div(); // Progress.
 echo html_writer::end_div(); // Wrapper.
-echo html_writer::end_div(); // Playerraid-boss-container.
 
-// Check if boss is defeated.
+echo html_writer::end_div(); // Boss card.
+echo html_writer::end_div(); // Left column.
+
+// Right Column: Battle / Status Panel.
+echo html_writer::start_div('col-md-6 mb-4');
+
 if ($currenthealth <= 0) {
-    echo $OUTPUT->notification(get_string('defeated', 'playerraid'), 'notifysuccess');
-    echo $OUTPUT->footer();
-    exit;
-}
-
-// Check cooldown for the current user.
-$sql = "SELECT MAX(cooldown_expires) AS maxcooldown
-          FROM {playerraid_attempts}
-         WHERE playerraidid = :pid AND userid = :uid";
-$cooldownrecord = $DB->get_record_sql($sql, ['pid' => $playerraid->id, 'uid' => $USER->id]);
-$cooldownexpires = $cooldownrecord ? (int)$cooldownrecord->maxcooldown : 0;
-$currenttime = time();
-
-echo html_writer::start_div('playerraid-attack-section');
-
-if ($cooldownexpires > $currenttime) {
-    // User is on cooldown. Display message and disabled button.
+    // Defeated/Victory state.
+    echo html_writer::start_div('playerraid-status-card playerraid-victory-card text-center');
+    echo html_writer::tag('i', '', ['class' => 'fa fa-trophy fa-3x mb-3 text-warning', 'aria-hidden' => 'true']);
+    echo html_writer::tag('h4', get_string('defeated', 'playerraid'), ['class' => 'text-success']);
+    echo html_writer::end_div();
+} else if (!$canattempt) {
+    // User does not have permission to participate.
+    echo html_writer::start_div('playerraid-status-card playerraid-cooldown-card text-center');
+    echo html_writer::tag('i', '', ['class' => 'fa fa-user-times fa-3x mb-3 text-danger', 'aria-hidden' => 'true']);
+    echo html_writer::tag('h4', get_string('cannotattempt', 'playerraid'), ['class' => 'text-muted']);
+    echo html_writer::end_div();
+} else if ($cooldownexpires > $currenttime) {
+    // Cooldown state.
     $waittime = $cooldownexpires - $currenttime;
-    echo $OUTPUT->notification(get_string('attackcooldown', 'playerraid', $waittime), 'notifywarning');
-
-    echo html_writer::tag(
-        'button',
-        html_writer::tag('i', '', ['class' => 'fa fa-clock-o me-2', 'aria-hidden' => 'true']) . get_string('attack', 'playerraid'),
-        [
-            'type' => 'button',
-            'class' => 'btn btn-secondary playerraid-btn-attack disabled',
-            'disabled' => 'disabled',
-            'aria-disabled' => 'true',
-        ]
-    );
+    echo html_writer::start_div('playerraid-status-card playerraid-cooldown-card text-center');
+    echo html_writer::tag('i', '', ['class' => 'fa fa-lock fa-3x mb-3 text-danger', 'aria-hidden' => 'true']);
+    echo html_writer::tag('h4', get_string('attackcooldown', 'playerraid', $waittime), ['class' => 'text-muted']);
+    echo html_writer::end_div();
+} else if (empty($question)) {
+    // No questions found.
+    echo html_writer::start_div('playerraid-status-card playerraid-error-card text-center');
+    echo html_writer::tag('i', '', ['class' => 'fa fa-exclamation-triangle fa-3x mb-3 text-warning', 'aria-hidden' => 'true']);
+    echo html_writer::tag('h4', get_string('noquestions', 'playerraid'), ['class' => 'text-danger']);
+    echo html_writer::end_div();
 } else {
-    // User can attack. Display active form.
+    // Active battle state with question.
+    echo html_writer::start_div('playerraid-battle-card');
+    echo html_writer::tag('h3', get_string('question', 'playerraid'), ['class' => 'mb-3']);
+
+    // Display question text.
+    echo html_writer::div(
+        format_text($question->questiontext, $question->questiontextformat),
+        'playerraid-question-text mb-4'
+    );
+
+    // Simple form for answer submission.
     echo html_writer::start_tag(
         'form',
         [
             'method' => 'post',
-            'action' => new moodle_url('/mod/playerraid/attempt.php'),
-            'class' => 'playerraid-attack-form',
+            'action' => new moodle_url('/mod/playerraid/process.php'),
+            'class' => 'playerraid-answer-form',
         ]
     );
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => $cm->id]);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'questionid', 'value' => $question->id]);
+
+    // Display answer options based on question type.
+    $qtypename = $question->qtype->name();
+    if ($qtypename === 'multichoice' || $qtypename === 'truefalse') {
+        $answers = $DB->get_records('question_answers', ['question' => $question->id], 'id');
+
+        echo html_writer::start_div('form-group mb-3');
+        echo html_writer::tag('label', get_string('youranswer', 'playerraid'), ['class' => 'form-label font-weight-bold']);
+
+        foreach ($answers as $answer) {
+            $radiohtml = html_writer::empty_tag(
+                'input',
+                [
+                    'type' => 'radio',
+                    'name' => 'answer',
+                    'value' => $answer->id,
+                    'id' => 'answer_' . $answer->id,
+                    'class' => 'form-check-input',
+                ]
+            );
+            $labelhtml = html_writer::tag(
+                'label',
+                format_text($answer->answer, FORMAT_HTML),
+                ['for' => 'answer_' . $answer->id, 'class' => 'form-check-label']
+            );
+
+            echo html_writer::div($radiohtml . ' ' . $labelhtml, 'form-check');
+        }
+        echo html_writer::end_div();
+    } else {
+        // Default fallback to text input.
+        echo html_writer::start_div('form-group mb-3');
+        echo html_writer::tag('label', get_string('youranswer', 'playerraid'), [
+            'for' => 'answer_text',
+            'class' => 'form-label font-weight-bold',
+        ]);
+        echo html_writer::empty_tag(
+            'input',
+            [
+                'type' => 'text',
+                'name' => 'answer_text',
+                'id' => 'answer_text',
+                'class' => 'form-control',
+            ]
+        );
+        echo html_writer::end_div();
+    }
+
     echo html_writer::tag(
         'button',
         html_writer::tag('i', '', ['class' => 'fa fa-bolt me-2', 'aria-hidden' => 'true']) . get_string('attack', 'playerraid'),
         [
             'type' => 'submit',
-            'class' => 'btn playerraid-btn-attack',
+            'class' => 'btn playerraid-btn-attack w-100 mt-3',
         ]
     );
     echo html_writer::end_tag('form');
+    echo html_writer::end_div(); // Battle card.
 }
 
-echo html_writer::end_div();
+echo html_writer::end_div(); // Right column.
+
+echo html_writer::end_div(); // Row.
+echo html_writer::end_div(); // Main container.
 
 echo $OUTPUT->footer();
