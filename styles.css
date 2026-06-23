@@ -148,7 +148,7 @@
 }
 
 /* Interactive quiz option cards. */
-.path-mod-playerraid .form-check {
+.path-mod-playerraid .playerraid-answer-form .form-check {
     padding: 0.75rem 1rem;
     margin-bottom: 0.75rem;
     border: 1px solid var(--gray-300, #dee2e6);
@@ -160,18 +160,18 @@
     align-items: center;
 }
 
-.path-mod-playerraid .form-check:hover {
+.path-mod-playerraid .playerraid-answer-form .form-check:hover {
     border-color: var(--primary, #007bff);
     background-color: rgba(0, 123, 255, 0.05);
 }
 
-.path-mod-playerraid .form-check-input {
+.path-mod-playerraid .playerraid-answer-form .form-check-input {
     margin-left: 0;
     margin-right: 0.75rem;
     cursor: pointer;
 }
 
-.path-mod-playerraid .form-check-label {
+.path-mod-playerraid .playerraid-answer-form .form-check-label {
     cursor: pointer;
     margin-bottom: 0;
     font-weight: 500;
