@@ -61,6 +61,7 @@ $PAGE->set_url('/mod/playerraid/view.php', ['id' => $cm->id]);
 $PAGE->set_title(format_string($playerraid->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
+$PAGE->requires->js_call_amd('mod_playerraid/cooldown_timer', 'init');
 
 echo $OUTPUT->header();
 
@@ -203,7 +204,10 @@ if ($currenthealth <= 0) {
     $waittime = $cooldownexpires - $currenttime;
     echo html_writer::start_div('playerraid-status-card playerraid-cooldown-card text-center');
     echo html_writer::tag('i', '', ['class' => 'fa fa-lock fa-3x mb-3 text-danger', 'aria-hidden' => 'true']);
-    echo html_writer::tag('h4', get_string('attackcooldown', 'playerraid', $waittime), ['class' => 'text-muted']);
+    $secondshtml = html_writer::span($waittime, 'playerraid-cooldown-seconds', [
+        'data-expiry' => $cooldownexpires,
+    ]);
+    echo html_writer::tag('h4', get_string('attackcooldown', 'playerraid', $secondshtml), ['class' => 'text-muted']);
     echo html_writer::end_div();
 } else if (empty($question)) {
     // No questions found.
