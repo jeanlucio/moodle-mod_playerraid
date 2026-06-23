@@ -40,7 +40,7 @@
     padding: 1rem;
 }
 
-/* Pedestal circular de fundo */
+/* Circular background pedestal. */
 .path-mod-playerraid .playerraid-theme-image-wrapper::before {
     content: '';
     position: absolute;
@@ -81,7 +81,7 @@
     gap: 0.5rem;
 }
 
-/* Barra de progresso personalizada */
+/* Custom progress bar. */
 .path-mod-playerraid .playerraid-progress-wrapper {
     margin-bottom: 2.5rem;
 }
@@ -101,12 +101,12 @@
     box-shadow: inset 0 -2px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Mudança de cor dinâmica para o Baú */
+/* Dynamic color change for the Vault theme. */
 .path-mod-playerraid .playerraid-theme-vault .progress-bar.playerraid-hp-bar-fill {
     background: linear-gradient(90deg, #f1c40f 0%, #f39c12 100%);
 }
 
-/* Pulsação quando vida está muito baixa */
+/* Pulsing effect when health is low. */
 .path-mod-playerraid .playerraid-hp-low {
     animation: hp-pulse 1.5s infinite alternate;
 }
@@ -122,7 +122,7 @@
     }
 }
 
-/* Seção de botões */
+/* Button section. */
 .path-mod-playerraid .playerraid-attack-section {
     text-align: center;
 }
