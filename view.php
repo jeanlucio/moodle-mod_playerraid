@@ -86,15 +86,51 @@ $totaldamage = $correctcount * $damagepercorrect;
 $currenthealth = max(0, $totalhealth - $totaldamage);
 $healthpercentage = ($currenthealth / $totalhealth) * 100;
 
-echo html_writer::start_div('playerraid-boss-container mb-4');
-echo html_writer::tag('h3', get_string('bossremaining', 'playerraid', ['current' => $currenthealth, 'total' => $totalhealth]));
-echo html_writer::start_div('progress');
+$theme = !empty($playerraid->visual_theme) ? $playerraid->visual_theme : 'boss';
+echo html_writer::start_div('playerraid-boss-container mb-4 playerraid-theme-' . $theme);
+
+$progress = 100 - $healthpercentage;
+if ($progress <= 20) {
+    $state = 1;
+} else if ($progress <= 40) {
+    $state = 2;
+} else if ($progress <= 60) {
+    $state = 3;
+} else if ($progress <= 80) {
+    $state = 4;
+} else {
+    $state = 5;
+}
+
+$imagepath = $CFG->dirroot . '/mod/playerraid/pix/themes/' . $theme . '/state_' . $state . '.png';
+if (file_exists($imagepath)) {
+    $imageurl = $OUTPUT->image_url('themes/' . $theme . '/state_' . $state, 'mod_playerraid');
+    echo html_writer::start_div('playerraid-theme-image-wrapper');
+    echo html_writer::empty_tag('img', [
+        'src' => $imageurl,
+        'alt' => get_string('visualtheme', 'playerraid'),
+        'class' => 'playerraid-boss-img',
+    ]);
+    echo html_writer::end_div();
+}
+
+$iconclass = ($theme === 'vault') ? 'fa-database' : 'fa-crosshairs';
+$hptitle = html_writer::tag('i', '', [
+    'class' => 'fa ' . $iconclass . ' me-2',
+    'aria-hidden' => 'true',
+]);
+$hptitle .= get_string('bossremaining', 'playerraid', ['current' => $currenthealth, 'total' => $totalhealth]);
+echo html_writer::tag('h3', $hptitle, ['class' => 'playerraid-hp-title']);
+
+$islow = ($currenthealth < ($totalhealth * 0.2)) ? ' playerraid-hp-low' : '';
+echo html_writer::start_div('playerraid-progress-wrapper');
+echo html_writer::start_div('progress playerraid-hp-bar' . $islow);
 echo html_writer::div(
     html_writer::span(
         get_string('bossremaining', 'playerraid', ['current' => $currenthealth, 'total' => $totalhealth]),
         'visually-hidden'
     ),
-    'progress-bar bg-danger',
+    'progress-bar playerraid-hp-bar-fill',
     [
         'role' => 'progressbar',
         'aria-valuenow' => $currenthealth,
@@ -103,8 +139,9 @@ echo html_writer::div(
         'style' => 'width: ' . $healthpercentage . '%',
     ]
 );
-echo html_writer::end_div();
-echo html_writer::end_div();
+echo html_writer::end_div(); // Progress.
+echo html_writer::end_div(); // Wrapper.
+echo html_writer::end_div(); // Playerraid-boss-container.
 
 // Check if boss is defeated.
 if ($currenthealth <= 0) {
@@ -130,10 +167,10 @@ if ($cooldownexpires > $currenttime) {
 
     echo html_writer::tag(
         'button',
-        get_string('attack', 'playerraid'),
+        html_writer::tag('i', '', ['class' => 'fa fa-clock-o me-2', 'aria-hidden' => 'true']) . get_string('attack', 'playerraid'),
         [
             'type' => 'button',
-            'class' => 'btn btn-secondary btn-lg',
+            'class' => 'btn btn-secondary playerraid-btn-attack disabled',
             'disabled' => 'disabled',
             'aria-disabled' => 'true',
         ]
@@ -152,10 +189,10 @@ if ($cooldownexpires > $currenttime) {
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => $cm->id]);
     echo html_writer::tag(
         'button',
-        get_string('attack', 'playerraid'),
+        html_writer::tag('i', '', ['class' => 'fa fa-bolt me-2', 'aria-hidden' => 'true']) . get_string('attack', 'playerraid'),
         [
             'type' => 'submit',
-            'class' => 'btn btn-primary btn-lg',
+            'class' => 'btn playerraid-btn-attack',
         ]
     );
     echo html_writer::end_tag('form');

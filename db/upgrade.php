@@ -78,5 +78,28 @@ function xmldb_playerraid_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2026030801, 'playerraid');
     }
 
+    if ($oldversion < 2026062301) {
+        // Define field visual_theme to be added to playerraid.
+        $table = new xmldb_table('playerraid');
+        $field = new xmldb_field(
+            'visual_theme',
+            XMLDB_TYPE_CHAR,
+            '50',
+            null,
+            XMLDB_NOTNULL,
+            null,
+            'boss',
+            'cooldown_time'
+        );
+
+        // Conditionally launch add field visual_theme.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Playerraid savepoint reached.
+        upgrade_mod_savepoint(true, 2026062301, 'playerraid');
+    }
+
     return true;
 }

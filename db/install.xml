@@ -13,6 +13,7 @@
         <FIELD NAME="boss_health" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="100" COMMENT="Total boss health"/>
         <FIELD NAME="questioncategoryid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Question category id"/>
         <FIELD NAME="cooldown_time" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="60" COMMENT="Cooldown in seconds after a wrong answer"/>
+        <FIELD NAME="visual_theme" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT="boss" COMMENT="Visual theme of the activity"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

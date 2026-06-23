@@ -67,6 +67,17 @@ class mod_playerraid_mod_form extends moodleform_mod {
         $mform->setDefault('cooldown_time', 60);
         $mform->addHelpButton('cooldown_time', 'cooldowntime', 'playerraid');
 
+        // Visual theme.
+        $mform->addElement('select', 'visual_theme', get_string('visualtheme', 'playerraid'), [
+            'boss' => get_string('themeboss', 'playerraid'),
+            'race' => get_string('themerace', 'playerraid'),
+            'thief' => get_string('themethief', 'playerraid'),
+            'vault' => get_string('themevault', 'playerraid'),
+        ]);
+        $mform->setDefault('visual_theme', 'boss');
+        $mform->setType('visual_theme', PARAM_ALPHA);
+        $mform->addHelpButton('visual_theme', 'visualtheme', 'playerraid');
+
         // Question category selector.
         $mform->addElement('header', 'questionsection', get_string('questioncategory', 'playerraid'));
 

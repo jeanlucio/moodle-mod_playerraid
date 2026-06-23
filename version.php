@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_playerraid';
-$plugin->version   = 2026030801;
+$plugin->version   = 2026062301;
 $plugin->requires  = 2022112800; // Moodle 4.0.
 $plugin->maturity  = MATURITY_ALPHA;
 $plugin->release   = '0.1.0';
