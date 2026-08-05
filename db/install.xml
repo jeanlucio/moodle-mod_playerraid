@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/playerraid/db" VERSION="20260308" COMMENT="XMLDB file for Moodle mod/playerraid">
+<XMLDB PATH="mod/playerraid/db" VERSION="20260308" COMMENT="XMLDB file for Moodle mod/playerraid"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
   <TABLES>
     <TABLE NAME="playerraid" COMMENT="Stores playerraid activity instances">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Course id"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Activity name"/>
-        <FIELD NAME="intro" TYPE="text" NOTNULL="false" COMMENT="Activity description"/>
-        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" COMMENT="Format of intro"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Time created"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Time modified"/>
-        <FIELD NAME="boss_health" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="100" COMMENT="Total boss health"/>
-        <FIELD NAME="questioncategoryid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Question category id"/>
-        <FIELD NAME="cooldown_time" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="60" COMMENT="Cooldown in seconds after a wrong answer"/>
-        <FIELD NAME="visual_theme" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT="boss" COMMENT="Visual theme of the activity"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Course id"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Activity name"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Activity description"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of intro"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Time created"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Time modified"/>
+        <FIELD NAME="boss_health" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="Total boss health"/>
+        <FIELD NAME="questioncategoryid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Question category id"/>
+        <FIELD NAME="cooldown_time" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="60" SEQUENCE="false" COMMENT="Cooldown in seconds after a wrong answer"/>
+        <FIELD NAME="visual_theme" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT="boss" SEQUENCE="false" COMMENT="Visual theme of the activity"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -26,11 +29,11 @@
     <TABLE NAME="playerraid_attempts" COMMENT="Stores user attacks and cooldowns">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="playerraidid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Reference to playerraid instance"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="User ID"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Time of the attempt"/>
-        <FIELD NAME="iscorrect" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="1 if correct, 0 if wrong"/>
-        <FIELD NAME="cooldown_expires" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Timestamp when the user can try again"/>
+        <FIELD NAME="playerraidid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Reference to playerraid instance"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User ID"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time of the attempt"/>
+        <FIELD NAME="iscorrect" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 if correct, 0 if wrong"/>
+        <FIELD NAME="cooldown_expires" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp when the user can try again"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
