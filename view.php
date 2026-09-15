@@ -61,12 +61,10 @@ $PAGE->set_url('/mod/playerraid/view.php', ['id' => $cm->id]);
 $PAGE->set_title(format_string($playerraid->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
+$PAGE->set_pagelayout('incourse');
 $PAGE->requires->js_call_amd('mod_playerraid/cooldown_timer', 'init');
 
 echo $OUTPUT->header();
-
-// Display the playerraid name and intro.
-echo $OUTPUT->heading(format_string($playerraid->name));
 
 if ($playerraid->intro) {
     echo $OUTPUT->box(format_module_intro('playerraid', $playerraid, $cm->id), 'generalbox mod_introbox', 'playerraidintro');
