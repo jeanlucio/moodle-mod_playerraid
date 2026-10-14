@@ -46,6 +46,7 @@ class backup_playerraid_activity_structure_step extends backup_activity_structur
                 'boss_health',
                 'questioncategoryid',
                 'cooldown_time',
+                'visual_theme',
             ]
         );
 

@@ -94,6 +94,7 @@ function playerraid_delete_instance($id) {
         return false;
     }
 
+    $DB->delete_records('playerraid_attempts', ['playerraidid' => $id]);
     $DB->delete_records('playerraid', ['id' => $id]);
 
     return true;
