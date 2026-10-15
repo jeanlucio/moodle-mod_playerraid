@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/playerraid/db" VERSION="20260308" COMMENT="XMLDB file for Moodle mod/playerraid"
+<XMLDB PATH="mod/playerraid/db" VERSION="20261015" COMMENT="XMLDB file for Moodle mod/playerraid"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -22,9 +22,6 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="fk_course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
       </KEYS>
-      <INDEXES>
-        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
-      </INDEXES>
     </TABLE>
     <TABLE NAME="playerraid_attempts" COMMENT="Stores user attacks and cooldowns">
       <FIELDS>
