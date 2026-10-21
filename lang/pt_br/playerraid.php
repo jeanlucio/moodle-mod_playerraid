@@ -62,6 +62,7 @@ $string['privacy:metadata:userid'] = 'O ID do usuário que fez a tentativa.';
 $string['question'] = 'Pergunta';
 $string['questioncategory'] = 'Categoria de questões';
 $string['questioncategory_help'] = 'Selecione uma categoria de questões do banco de questões. As perguntas serão sorteadas aleatoriamente desta categoria.';
+$string['resetplayerraiduserdata'] = 'Excluir as tentativas dos estudantes';
 $string['submit'] = 'Enviar resposta';
 $string['themeboss'] = 'Chefão';
 $string['themerace'] = 'Corrida';

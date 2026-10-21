@@ -62,6 +62,7 @@ $string['privacy:metadata:userid'] = 'The ID of the user who made the attempt.';
 $string['question'] = 'Question';
 $string['questioncategory'] = 'Question category';
 $string['questioncategory_help'] = 'Select a question category from the question bank. Questions will be randomly drawn from this category.';
+$string['resetplayerraiduserdata'] = 'Delete the students\' attempts';
 $string['submit'] = 'Submit answer';
 $string['themeboss'] = 'Boss';
 $string['themerace'] = 'Race';

@@ -99,3 +99,59 @@ function playerraid_delete_instance($id) {
 
     return true;
 }
+
+/**
+ * Adds the playerraid section to the course reset form.
+ *
+ * @param MoodleQuickForm $mform The course reset form.
+ * @return void
+ */
+function playerraid_reset_course_form_definition(MoodleQuickForm $mform): void {
+    $mform->addElement('header', 'playerraidheader', get_string('modulenameplural', 'mod_playerraid'));
+    $mform->addElement('advcheckbox', 'reset_playerraid_userdata', get_string('resetplayerraiduserdata', 'mod_playerraid'));
+}
+
+/**
+ * Returns the default values for the playerraid course reset form.
+ *
+ * @param stdClass $course The course being reset.
+ * @return array
+ */
+function playerraid_reset_course_form_defaults(stdClass $course): array {
+    return ['reset_playerraid_userdata' => 1];
+}
+
+/**
+ * Removes the students' attempts from the course's activities when it is reset.
+ *
+ * Core clears the completion and the grades by itself but only asks the activities that define this
+ * function to clear their own data. Left behind, the rows would satisfy the completion rule again and
+ * bring the old grade back for a student enrolled again. What the teacher wrote stays.
+ *
+ * @param stdClass $data Reset form data, must contain courseid.
+ * @return array Status rows for the course reset report.
+ */
+function playerraid_reset_userdata(stdClass $data): array {
+    global $DB;
+
+    $status = [];
+    if (empty($data->reset_playerraid_userdata)) {
+        return $status;
+    }
+
+    $instances = $DB->get_records('playerraid', ['course' => $data->courseid]);
+    if (empty($instances)) {
+        return $status;
+    }
+
+    [$insql, $inparams] = $DB->get_in_or_equal(array_keys($instances), SQL_PARAMS_NAMED, 'prid');
+    $DB->delete_records_select('playerraid_attempts', "playerraidid $insql", $inparams);
+
+    $status[] = [
+        'component' => get_string('modulenameplural', 'mod_playerraid'),
+        'item'      => get_string('resetplayerraiduserdata', 'mod_playerraid'),
+        'error'     => false,
+    ];
+
+    return $status;
+}
