@@ -37,4 +37,14 @@ class course_module_viewed extends \core\event\course_module_viewed {
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
         $this->data['objecttable'] = 'playerraid';
     }
+
+    /**
+     * Maps the logged object id to the activity instance the restore creates.
+     *
+     * @return array
+     */
+    #[\Override]
+    public static function get_objectid_mapping(): array {
+        return ['db' => 'playerraid', 'restore' => 'playerraid'];
+    }
 }
