@@ -16,7 +16,6 @@
 
 namespace mod_playerraid\event;
 
-
 /**
  * Event for when the PlayerRaid activity is viewed.
  *
